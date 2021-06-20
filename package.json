@@ -1,0 +1,12 @@
+{
+  "name": "bikecourier-api",
+  "version": "1.0.0",
+  "description": "This service helps manage deliveries. Developed with Expresss JS and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
