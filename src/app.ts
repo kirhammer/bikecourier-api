@@ -3,26 +3,47 @@
 =  Imports  =
 ===============================================>>>>>*/
 import express from "express"
-import * as routes from "./routes"
-import dotenv from "dotenv"
-
 
 /*= End of Imports =*/
 /*=============================================<<<<<*/
 
-// Initialize configuration
-dotenv.config();
+class App {
+  public app: express.Application
+  public port: number
 
-const PORT = process.env.EXPRESS_SERVER_PORT
+  constructor({controllers, port}: { controllers: any[], port: number }) {
+    this.app = express()
+    this.port = port
 
-// Initialize express
-const app = express()
+    this.initializeMiddlewares()
+    this.initializeControllers(controllers)
+  }
 
-// Router
-routes.register(app)
+  private initializeMiddlewares() {
+    this.app.use(express.json())
+    this.app.use((req, res, next) => {
+      // tslint:disable-next-line:no-console
+      console.log(`Request: `, {
+        path: req.path,
+        method: req.method,
+        body: req.body,
+        params: req.params,
+        query: req.query
+      })
+      next()
+    })
+  }
 
-// Handler
-app.listen(PORT, () => {
-  // tslint:disable-next-line:no-console
-  console.log(`Example app listening at http://localhost:${PORT}`)
-})
+  private initializeControllers(controllers: any[]) {
+    controllers.forEach(controller => this.app.use('/', controller.router));
+  }
+
+  public listen() {
+    this.app.listen(this.port, () => {
+      // tslint:disable-next-line:no-console
+      console.log(`Server is running on ${this.port}`)
+    })
+  }
+}
+
+export default App
